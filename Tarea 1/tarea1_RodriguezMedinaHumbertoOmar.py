@@ -1,21 +1,24 @@
 # ===================================
-# Tarea 1 - Apellido, Nombre - Grupo
+# Tarea 1 - Rodriguez Medina, Humberto Omar - Grupo
 # ===================================
 # EJERCICIO 1
-# Creamos las variables nombre y edad como int
+# Paso 1: Creamos las variables nombre (string) y edad (int)
+# Paso 2: Imprimimos el texto y cambiamos el tipo de edad a str para concatenar
 nombre = "humberto"
 edad = 20
-# cambiamos el tipo de edad a str para concatenar
 print("Hola, me llamo ", nombre, "y tengo ", str(edad), " años.")
-#Ejemplo de salida
+# Ejemplo de salida
 # Hola, me llamo Humberto y tengo 20 años.
 
 # EJERCICIO 2
-#Imprimir los pimeros 
+# Paso 1: Usamos una variable n para definir el rango del ciclo for
+# Paso 2: iniciamos desde el numero uno, y le
+#         agregamos 1 a n en el rango para que incluya el numero n
+# Paso 3: Multiplicamos i por 5 para obtener los primeros n multiplos de 5
 n = 10
-for i in range(1, n+1):
-    print(5*i)
-#Ejemplo de salida
+for i in range(1, n + 1):
+    print(5 * i)
+# Ejemplo de salida
 # si n = 5
 # 5
 # 10
@@ -24,15 +27,18 @@ for i in range(1, n+1):
 # 25
 
 # EJERCICIO 3
-# (Explica en 2 líneas cómo funciona el acumulador)
-n = 5
+# Paso 1: El acumulador inicia en 0 y llega hasta n
+# Paso 2: En cada iteracion se le suma i + 1 (para iniciar desde 1 y no desde 0)
+# Paso 3: Imprimimos el resultado parcial en cada iteracion
+# Paso 4: Al finalizar el ciclo, imprimimos el resultado final
+n = 10
 acumulador = 0
 for i in range(n):
-    acumulador += (i+1)
-    print('result',acumulador)
+    acumulador += i + 1
+    print(acumulador)
 
-print('la suma de 1 a',n,'es',acumulador)
-#Ejemplo de salida
+print("la suma de 1 a", n, "es", acumulador)
+# Ejemplo de salida
 # si n = 5
 # 1
 # 3
@@ -41,8 +47,9 @@ print('la suma de 1 a',n,'es',acumulador)
 # 15
 
 # EJERCICIO 4
+#
 n = 20
-for i in range (n+1):
+for i in range(n + 1):
     if i % 2 == 0:
         print(i)
 # Ejemplo de salida
@@ -59,7 +66,7 @@ calificacion = 5
 if calificacion == 10:
     print("EXCELENTE")
 elif calificacion >= 6:
-    print("APROBADO")   
+    print("APROBADO")
 else:
     print("REPROBADO")
 # Ejemplo de salida
@@ -80,19 +87,19 @@ else:
 print("Precio: $", monto)
 # ...
 # EJERCICIO 7
-vocales = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+vocales = ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"]
 cadena = "Hola, me llAmo Humberto"
 contador = 0
 for c in cadena:
     if c in vocales:
         contador += 1
         print("se encontro", c, "el contador es:", contador)
-    
+
 print("Total de vocales mayúscuas o minúsculas:", contador)
 # ...
 # EJERCICIO 8
 # (Explica qué hace s[::-1])
-#S[los primeros caracteres: los ultimos caracteres: el paso de uno en uno hacia atras]
+# S[los primeros caracteres: los ultimos caracteres: el paso de uno en uno hacia atras]
 s = "Humberto"
 print(s[::-1])
 # ...
@@ -136,10 +143,10 @@ elif a == b:
 # (Ejercicios adicionales opcionales)
 # EJERCICIO 13
 n = 11
-terPar = ['0','2','4','6','8']
-terImpar = ['1','3','5','7','9']
+terPar = ["0", "2", "4", "6", "8"]
+terImpar = ["1", "3", "5", "7", "9"]
 if n % 2 != 0:
     print("Es impar")
 else:
     print("Es par")
-#...
+# ...
