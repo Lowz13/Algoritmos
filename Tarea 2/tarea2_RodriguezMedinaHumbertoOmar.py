@@ -7,7 +7,6 @@ def cifra_cesar(texto, llave):
     Returns:
         str: Texto cifrado
     """
-    alfabeto = "abcdefghijklmnopqrstuvwxyz"
     resultado = ""
     texto = texto.lower()
     for c in texto:
@@ -23,8 +22,7 @@ def cifra_cesar(texto, llave):
 def descifra_cesar(cadena_cifrada, llave):
     # TODO: Implementar descifrado
     # Pista: El descifrado es como cifrar con llave negativa
-    
-    pass
+    return cifra_cesar(cadena_cifrada, -llave)
 
 def cargar_diccionario(archivo):
     """
@@ -55,10 +53,9 @@ def get_aciertos(texto, diccionario):
     aciertos = 0
     palabra = ""
     for c in texto:
-        if ord(c) >= 97 and ord(c) <= 122:
-            palabra += c 
+        if c in alfabeto:
+            palabra += c
         else:
-            print(palabra)
             if palabra in diccionario:
                 aciertos += 1
             palabra = ""
@@ -68,13 +65,22 @@ def get_aciertos(texto, diccionario):
     
     return aciertos
 
-cargar = cargar_diccionario("words.txt")
-texto = "we are replaceable in what we do, but not in what we are,"
-texto +=" what you do perfectly can be done by someone else,"
-texto +=" but what you are and what you transmit, that can never be replaced."
-cifrado = cifra_cesar(texto, 3)
-print(cifrado)
-aciertos = get_aciertos(texto, cargar)
-print(aciertos)
-descifra = descifra_cesar(cifrado, 3)
-print(descifra)
+def prueba_cesar():
+    cargar = cargar_diccionario("words.txt")
+    texto = "we are replaceable in what we do, but not in what we are,"+\
+    " what you do perfectly can be done by someone else,"+\
+    " but what you are and what you transmit, that can never be replaced."
+    cifrado = cifra_cesar(texto, 16)
+    print(cifrado,"\n")    
+    mejor_aciertos = 0
+    mejor_descifrado = ""
+    for i in range(26):
+        descifrado = descifra_cesar(cifrado, i)
+        aciertos = get_aciertos(descifrado, cargar)
+        if aciertos > mejor_aciertos:
+            mejor_aciertos = aciertos
+            mejor_descifrado = descifrado
+            print("El mejor descifrado actualmente es:\n", mejor_descifrado, "\nContiene", mejor_aciertos, "aciertos\n")
+
+alfabeto = "abcdefghijklmnopqrstuvwxyz"
+prueba_cesar()
