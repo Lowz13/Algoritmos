@@ -4,5 +4,5 @@ Este repositorio contiene tareas, anotaciones y proyectos de la materia Diseño 
     Python básico, 12 ejercicios básicos
 - Tarea 2 Estado: **Terminada**
     Descifrado por fuerza bruta el cifrado César
-- Tarea 3 Estado: **En desarrollo**
+- Tarea 3 Estado: **Terminada**
     Aritmética modular
