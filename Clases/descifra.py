@@ -1,8 +1,7 @@
 import random as rd
 
-
 # ============================
-def conseguir_llave(alfabetoCifrado):
+def conseguir_llave(alfabetoCifrado,alfabeto, cifrado):
     llave = ''
     for i in alfabeto:
         
@@ -47,16 +46,22 @@ def descifra_sustitucion(cadena, llave):
 # DICIONARIO
 # ============================
 def carga_diccionario(ruta):
-    arch = open(ruta, 'r')
-    texto = arch.read()
-    arch.close()
-    return texto.split()
+    try:
+        with open(ruta, 'r', encoding='utf-8') as arch:
+            print(f"Diccionario {ruta} cargado correctamente.")
+            return arch.read().split()
+    except FileNotFoundError:
+        print(f"Error: No se encontró el archivo {ruta}")
+        return []
+    except Exception as e:
+        print(f"Error al cargar diccionario: {e}")
+        return []
 
 
 # ============================
 # PRIMERAS PALABRAS
 # ============================
-def coleccion_de_letras(cadena, adicionales):
+def coleccion_de_letras(cadena, adicionales, prueba):
     mejoresLetras = []
     contador = 0
     index = []
@@ -76,9 +81,11 @@ def coleccion_de_letras(cadena, adicionales):
         extra = cadena.split()[rd.randint(0, contador-1)]
         if extra[-1] in '.,!?':
                 extra = extra[:-1]
-        #print ('sugerencia:', extra)
+        if prueba:
+            print ('sugerencia:', extra)
         if not (extra in mejoresLetras):
-            #print('agregado:', extra)
+            if prueba:
+                print('agregado:', extra)
             mejoresLetras.append(extra)
             adicionales -= 1  
               
@@ -87,12 +94,13 @@ def coleccion_de_letras(cadena, adicionales):
 # ============================
 # PALABRAS COMPLETAS
 # ============================
-def palabras_completas(cadena):
+def palabras_completas(cadena,prueba):
     letras = []
     for i in cadena.split():
         if i[-1] in '.,!?':
             i = i[:-1]
-        #print ('sugerencia:', i)
+        if prueba:
+            print ('sugerencia:', i)
         letras.append(i)
         letras = sorted(letras, key=len, reverse=True)[:]
     return letras
@@ -127,32 +135,35 @@ def buscar_letras():
 #============================
 # SUPOSICION
 # ============================
-def suposicion (alfabetoCifrado):
+def suposicion (alfabetoCifrado,alfabeto, cifrado,prueba):
     for i in alfabeto:
         
         
         #encontrar letras que no terminaron de definirse
         if len(alfabetoCifrado[i]) > 1 and i in cifrado:
-            print("revisando:", i, alfabetoCifrado[i])
-            print("="*20)
+            if prueba:
+                print("revisando:", i, alfabetoCifrado[i])
+                print("="*20)
             temp = alfabetoCifrado[i]
             tempDos = ''
             for compara in alfabeto:
                 if len(alfabetoCifrado[compara]) == 1 and alfabetoCifrado[compara] in temp:
-                    print("encontro coincidencia en:",compara)
+                    if prueba:
+                        print("encontro coincidencia en:",compara)
                     for j in temp:
                         if j != alfabetoCifrado[compara]:
                             tempDos += j
-                            
-                    print("temporal:", tempDos)
+
+                    if prueba:
+                        print("temporal:", tempDos)
                     temp = tempDos
                     if len(tempDos) == 1:
                         alfabetoCifrado[i] = ''
                         alfabetoCifrado[i] = tempDos
                         break
                     tempDos = ''
-
-        print(i, alfabetoCifrado[i])
+        if prueba:
+            print(i, alfabetoCifrado[i])
 
     return alfabetoCifrado
 
@@ -160,7 +171,7 @@ def suposicion (alfabetoCifrado):
 # ============================
 # FUNCION PRINCIPAL
 # ============================
-def inicio_descifrado (diccionario, palabra, alfabetoCifrado):
+def inicio_descifrado (diccionario, palabra, alfabetoCifrado, prueba):
     #acumuladores
     coincidencias = 0
     pruebaCoincidencias = ''
@@ -183,11 +194,11 @@ def inicio_descifrado (diccionario, palabra, alfabetoCifrado):
             for j in range(i + 1, len(patron_letras)):
                 posiciones_iguales.append((patron_letras[i], patron_letras[j]))
     
-    
-    print("="*20)
-    print(f"Palabra: {palabra}")
-    print(f"Posiciones que deben ser iguales: {posiciones_iguales}")
-    print("="*20)
+    if prueba:
+        print("="*20)
+        print(f"Palabra: {palabra}")
+        print(f"Posiciones que deben ser iguales: {posiciones_iguales}")
+        print("="*20)
     
     
     for limpieza in set(palabra):
@@ -205,94 +216,130 @@ def inicio_descifrado (diccionario, palabra, alfabetoCifrado):
                 #Segundo filtrado
                 for patron in range(len(palabra)):
                     bandera = False
-                    #print('revisando:', p[patron],'en',palabra[patron], alfabetoCifrado[palabra[patron]])
+                    if prueba:
+                        print('revisando:', p[patron],'en',palabra[patron], alfabetoCifrado[palabra[patron]])
                     if p[patron] in alfabetoCifrado[palabra[patron]]:
                         bandera = True
                         
                     if bandera == False:
-                        #print(p,'no cumple con\n')
+                        if prueba:
+                            print(p,'no cumple con\n')
+                        
                         break
                 
                 if bandera == True:
-                    #print(p,'\n')
+                    if prueba:
+                        print(p,'\n')
                     coincidencias += 1
 
-            
-                #print('posible:', p)
-                #print('posible:', p)
-                
+                if prueba:
+                    print('posible:', p)
+
                 for c in range(len(palabra)):
                     if not (p[c] in externo[palabra[c]]) and bandera == True:
                         externo[palabra[c]] += p[c]
 
 
     for c in set(palabra):
-        #print (c)
-        #if len(externo[c]) == len(alfabetoCifrado[c]):
-            #print("iguales",c, externo[c], alfabetoCifrado[c])
-        #if len(externo[c]) > len(alfabetoCifrado[c]) and coincidencias > 0:
-            #print("error",c, externo[c], alfabetoCifrado[c])
+        if 1:
+            if len(externo[c]) == len(alfabetoCifrado[c]):
+                print("iguales",c, alfabetoCifrado[c],'->', externo[c])
+            if len(externo[c]) > len(alfabetoCifrado[c]) and coincidencias > 0:
+                print("error",c, externo[c], alfabetoCifrado[c])
         
         if len(externo[c]) < len(alfabetoCifrado[c]) and coincidencias > 0:
-            print("cambios",c, externo[c], alfabetoCifrado[c])
+            
+            print("cambios",c, alfabetoCifrado[c],'->', externo[c])
             alfabetoCifrado[c] = externo[c]
-        
+            
+    
+
                   
-    print('cumple:', coincidencias)
-
-    for i in set(palabra):
-        print(i, alfabetoCifrado[i])
+    print('la palabra',palabra,'cumple:', coincidencias)
+    print("="*20)
+    if coincidencias == 1:
+        alfabetoCifrado[c] = externo[c]
+    if prueba:
+        for i in set(palabra):
+            print(i, alfabetoCifrado[i])
 
     
     
-    return alfabetoCifrado
+    return alfabetoCifrado, coincidencias
 
+
+def elimina_completados(coleccion, eliminados):
+    for e in eliminados:
+        if e in coleccion:
+            count = coleccion.count(e)
+            for _ in range(count):
+                coleccion.remove(e)
+    return coleccion
 
 # ============================
-numeros = '0123456789'
+def main():
+    #Constantes
+    ALFABETO = 'abcdefghijklmnopqrstuvwxyz'
+    CIFRADO = 'iqzn hdiq l omrn ovncn jle l bianbk dcmqznee. who evn vlf lq nqzvlqornqo hdiq ' \
+            'vnc ip l pnlcphb eico jvmzv zihbf iqbk wn wciunq wk bian.'
+            
+    #Inicializar
+    alfabetoCifrado = {letra : ALFABETO for letra in ALFABETO}
+    diccionario = carga_diccionario('Tarea 2/words.txt')
+    if not diccionario:
+        return
 
-alfabeto = 'abcdefghijklmnopqrstuvwxyz'
+    #Proceso
+    print("Iniciando proceso de descifrado...")
+    
+    #Fase 1: palabras con patrones
+    coleccion = coleccion_de_letras(CIFRADO,3, False)
+    eliminados = []
+    print("Coleccion:",coleccion)
+    for _ in range(3):
+        for palabra in coleccion:
+            cifrado = inicio_descifrado(diccionario, palabra, alfabetoCifrado, False)
+            alfabetoCifrado = cifrado[0]
+            if cifrado[1] == 1 or cifrado[1] == 0:
+                print("Palabra resuelta:", palabra)
+                eliminados.append(palabra)
+        elimina_completados(coleccion, eliminados)
+                
+        
+    for i in ALFABETO:
+        print(i, alfabetoCifrado[i])
+        
+    print("Palabras eliminadas:", eliminados)
+    print("="*20)
+    
+    general = palabras_completas(CIFRADO,False)
+    print(general)
+    if len(general) == len(CIFRADO.split()):
+        print("Se encontraron todas las palabras.")
+    elimina_completados(general, eliminados)
+    print(general)
+    
+    for i in range(2):
+        for j in range(len(general)):
+            cifrado = inicio_descifrado(diccionario, general[j], alfabetoCifrado, False)
+            alfabetoCifrado = cifrado[0]
+            if cifrado[1] == 1 or cifrado[1] == 0:
+                print("Palabra resuelta:", palabra)
+                eliminados.append(palabra)
+        elimina_completados(coleccion, eliminados)
 
-cifrado = 'iqzn hdiq l omrn ovncn jle l bianbk dcmqznee. who evn vlf lq nqzvlqornqo hdiq ' \
-          'vnc ip l pnlcphb eico jvmzv zihbf iqbk wn wciunq wk bian.'
-          
-#Crear alfabeto cifrado
-alfabetoCifrado = {}
-for i in alfabeto:
-    alfabetoCifrado[i] = alfabeto
+    alfabetoCifrado = suposicion(alfabetoCifrado, ALFABETO, CIFRADO, False)
 
-diccionario = carga_diccionario('Tarea 2/words.txt')
-
-print("Creando un arreglo de palabras a descirfrar...")
-coleccion = coleccion_de_letras(cifrado,3)
-print("Coleccion:",coleccion)
-
-for repeticion in range(3):
-    for i in range(len(coleccion)):
-    #for i in range(3):
-        descifraA = inicio_descifrado(diccionario, coleccion[i], alfabetoCifrado)
-        alfabetoCifrado = descifraA
-for i in alfabeto:
-    print(i, alfabetoCifrado[i])
-
-general = palabras_completas(cifrado)
-print(general)
-if len(general) == len(cifrado.split()):
-    print("Se encontraron todas las palabras.")
-for i in range(2):
-    for j in range(len(general)):
-        descifraA = inicio_descifrado(diccionario, general[j], alfabetoCifrado)
-        alfabetoCifrado = descifraA
-
-alfabetoCifrado = suposicion(alfabetoCifrado)
-
-llave = conseguir_llave(alfabetoCifrado)
-print("Llave encontrada:")
-print(llave)
+    llave = conseguir_llave(alfabetoCifrado, ALFABETO, CIFRADO)
+    print("Llave encontrada:")
+    print(llave)
 
 
-mensaje = descifrando(cifrado, llave)
-print("Mensaje descifrado:")
-print("="   *20)
-print(cifrado)
-print(mensaje)
+    mensaje = descifrando(CIFRADO, llave)
+    print("Mensaje descifrado:")
+    print("="   *20)
+    print(CIFRADO)
+    print(mensaje)
+
+if __name__ == "__main__":
+    main()
